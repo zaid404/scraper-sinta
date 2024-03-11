@@ -1,7 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor
 
-for page_number in range(30, 40):
+max_threads = 50
+
+def scrape_page(page_number):
     url = f"https://sinta.kemdikbud.go.id/journals/index/?page={page_number}"
 
     # Mengirim permintaan GET ke URL
@@ -39,4 +42,12 @@ for page_number in range(30, 40):
     else:
         print(f"Gagal mengakses halaman {page_number}.")
 
-print("Proses selesai.")
+def main():
+    with ThreadPoolExecutor(max_threads) as executor:
+        # Memulai eksekusi multi-threaded untuk setiap halaman
+        executor.map(scrape_page, range(0, 10000))
+
+    print("Proses selesai.")
+
+if __name__ == "__main__":
+    main()
